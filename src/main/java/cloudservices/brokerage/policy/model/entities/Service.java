@@ -33,6 +33,14 @@ public class Service extends UniObject implements Serializable {
     private String WSDLURL;
     @Column
     private String servicesStr;
+    @Column
+    private String inputPropositions;
+    @Column
+    private int numberOfInputs;
+    @Column
+    private String outputPropositions;
+    @Column
+    private int numberOfOutputs;
     @OneToMany(mappedBy = "service")
     private Set<ServiceProposition> servicePropositions;
     @OneToMany(mappedBy = "service")
@@ -43,8 +51,38 @@ public class Service extends UniObject implements Serializable {
     public Service() {
         this.services = new ArrayList<>();
         this.servicePropositions = new HashSet<>();
-        this.policyServices=new HashSet<>();
+        this.policyServices = new HashSet<>();
         servicesStr = "";
+        inputPropositions = "";
+        outputPropositions = "";
+        numberOfInputs = 0;
+        numberOfOutputs = 0;
+    }
+
+    protected boolean addInput(Proposition prop) {
+        String inputStr = prop.getName() + "-" + prop.getId();
+        if (inputPropositions.contains(inputStr)) {
+            return false;
+        }
+        if (numberOfInputs > 0) {
+            inputPropositions += ",";
+        }
+        inputPropositions += inputStr;
+        numberOfInputs++;
+        return true;
+    }
+
+    protected boolean addOutput(Proposition prop) {
+        String outputStr = prop.getName() + "-" + prop.getId();
+        if (outputPropositions.contains(outputStr)) {
+            return false;
+        }
+        if (numberOfOutputs > 0) {
+            outputPropositions += ",";
+        }
+        outputPropositions += outputStr;
+        numberOfOutputs++;
+        return true;
     }
 
     public boolean addServiceLevel(Set<Service> serviceLevel) {
@@ -107,7 +145,23 @@ public class Service extends UniObject implements Serializable {
     public Set<PolicyService> getPolicyServices() {
         return policyServices;
     }
-    
+
+    public String getInputPropositions() {
+        return inputPropositions;
+    }
+
+    public String getOutputPropositions() {
+        return outputPropositions;
+    }
+
+    public int getNumberOfInputs() {
+        return numberOfInputs;
+    }
+
+    public int getNumberOfOutputs() {
+        return numberOfOutputs;
+    }
+
     private String getServicesStr(Set<Service> services) {
         String str = "";
         for (Service service : services) {

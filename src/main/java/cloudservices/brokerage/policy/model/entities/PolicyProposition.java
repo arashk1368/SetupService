@@ -36,6 +36,32 @@ public class PolicyProposition implements Serializable {
     public PolicyProposition() {
     }
 
+    public boolean addEventToPolicy(Policy policy, Proposition event) {
+        boolean result = policy.addEvent(event);
+        if(!result){
+            return false;
+        }
+        else{
+            this.setPolicy(policy);
+            this.setProposition(event);
+            this.setType(PolicyPropositionType.EVENT);
+            return true;
+        }
+    }
+    
+    public boolean addConditionToPolicy(Policy policy, Proposition condition) {
+        boolean result = policy.addCondition(condition);
+        if(!result){
+            return false;
+        }
+        else{
+            this.setPolicy(policy);
+            this.setProposition(condition);
+            this.setType(PolicyPropositionType.CONDITION);
+            return true;
+        }
+    }
+    
     public Long getId() {
         return id;
     }
@@ -67,6 +93,4 @@ public class PolicyProposition implements Serializable {
     public void setPolicy(Policy policy) {
         this.policy = policy;
     }
-    
-    
 }

@@ -31,6 +31,18 @@ public class PolicyService implements Serializable {
     public PolicyService() {
     }
 
+    public boolean addActionToPolicy(Policy policy, Service action) {
+        boolean result = policy.addAction(action);
+        if(!result){
+            return false;
+        }
+        else{
+            this.setPolicy(policy);
+            this.setService(action);
+            return true;
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -54,6 +66,4 @@ public class PolicyService implements Serializable {
     public void setPolicy(Policy policy) {
         this.policy = policy;
     }
-    
-    
 }

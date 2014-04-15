@@ -36,6 +36,30 @@ public class ServiceProposition implements Serializable {
     public ServiceProposition() {
     }
 
+    protected boolean addInputToService(Service service, Proposition input) {
+        boolean result = service.addInput(input);
+        if (!result) {
+            return false;
+        } else {
+            this.setProposition(input);
+            this.setService(service);
+            this.setType(ServicePropositionType.INPUT);
+            return true;
+        }
+    }
+
+    protected boolean addOutputToService(Service service, Proposition output) {
+        boolean result = service.addOutput(output);
+        if (!result) {
+            return false;
+        } else {
+            this.setProposition(output);
+            this.setService(service);
+            this.setType(ServicePropositionType.OUTPUT);
+            return true;
+        }
+    }
+
     public Long getId() {
         return id;
     }
