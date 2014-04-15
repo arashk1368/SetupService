@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package cloudservices.brokerage.utils.db_utils;
+package cloudservices.brokerage.policy.setupservice.utils;
 
 import cloudservices.brokerage.policy.setupservice.service.SetupWS;
 import java.util.logging.Level;

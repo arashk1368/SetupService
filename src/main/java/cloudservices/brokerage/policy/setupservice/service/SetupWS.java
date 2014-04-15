@@ -4,9 +4,9 @@
  */
 package cloudservices.brokerage.policy.setupservice.service;
 
+import cloudservices.brokerage.commons.utils.file_utils.ResourceFileUtil;
+import cloudservices.brokerage.commons.utils.logging.LoggerSetup;
 import cloudservices.brokerage.policy.model.DAO.BaseDAO;
-import cloudservices.brokerage.utils.file_utils.ResourceFileUtil;
-import cloudservices.brokerage.utils.logging.LoggerSetup;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;

@@ -4,7 +4,7 @@
  */
 package cloudservices.brokerage.policy.model.DAO;
 
-import cloudservices.brokerage.utils.db_utils.HibernateUtil;
+import cloudservices.brokerage.policy.setupservice.utils.HibernateUtil;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
