@@ -4,6 +4,7 @@
  */
 package cloudservices.brokerage.policy.model.DAO;
 
+import cloudservices.brokerage.policy.policycommons.model.DAO.DAOException;
 import cloudservices.brokerage.policy.setupservice.utils.HibernateUtil;
 import java.io.Serializable;
 import java.sql.Connection;
