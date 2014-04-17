@@ -174,6 +174,34 @@ public class SampleDataInserter {
         serviceDAO.saveOrUpdate(crawler4jFiltered);
         serviceDAO.saveOrUpdate(websphinx);
         policyDAO.saveOrUpdate(policy);
+        
+        Service composite = new Service();
+        composite.setName("Composite Service");
+        Set<Service> level1 = new HashSet<>();
+        level1.add(websphinx);
+        Set<Service> level2 = new HashSet<>();
+        level2.add(crawler4j);
+        Set<Service> level3 = new HashSet<>();
+        level3.add(crawler4j);
+        composite.addServiceLevel(level1);
+        composite.addServiceLevel(level2);
+        composite.addServiceLevel(level3);
+        composite.setId((Long) serviceDAO.save(composite));
+        
+        ServiceProposition csp = new ServiceProposition();
+        csp.addInputToService(composite, seedsAvailable);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, thirdLevel);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, websphinxFinished);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, crawler4jFinished);
+        servicePropositionDAO.save(csp);
+        
+        serviceDAO.saveOrUpdate(composite);
         return true;
     }
 }
