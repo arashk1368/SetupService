@@ -48,13 +48,13 @@ public class SampleDataInserter {
     public boolean insertSampleData() throws DAOException {
         Proposition firstLevel = new Proposition();
         firstLevel.setName("First Level");
-        firstLevel.setValid(false);
+        firstLevel.setValid(true);
         Proposition secondLevel = new Proposition();
         secondLevel.setName("Second Level");
-        secondLevel.setValid(false);
+        secondLevel.setValid(true);
         Proposition thirdLevel = new Proposition();
         thirdLevel.setName("Third Level");
-        thirdLevel.setValid(false);
+        thirdLevel.setValid(true);
         
         firstLevel.setId((Long) propositionDAO.save(firstLevel));
         secondLevel.setId((Long) propositionDAO.save(secondLevel));
@@ -62,13 +62,13 @@ public class SampleDataInserter {
         
         Proposition crawler4jFinished = new Proposition();
         crawler4jFinished.setName("Crawler4j Finished");
-        crawler4jFinished.setValid(false);
+        crawler4jFinished.setValid(true);
         Proposition crawler4jFilteredFinished = new Proposition();
         crawler4jFilteredFinished.setName("Crawler4j With Filter Finished");
-        crawler4jFilteredFinished.setValid(false);
+        crawler4jFilteredFinished.setValid(true);
         Proposition websphinxFinished = new Proposition();
         websphinxFinished.setName("Websphinx Finished");
-        websphinxFinished.setValid(false);
+        websphinxFinished.setValid(true);
         
         crawler4jFinished.setId((Long) propositionDAO.save(crawler4jFinished));
         crawler4jFilteredFinished.setId((Long) propositionDAO.save(crawler4jFilteredFinished));
@@ -76,10 +76,10 @@ public class SampleDataInserter {
         
         Proposition filterAvailable = new Proposition();
         filterAvailable.setName("Filter Available");
-        filterAvailable.setValid(false);
+        filterAvailable.setValid(true);
         Proposition seedsAvailable = new Proposition();
         seedsAvailable.setName("Seeds Available");
-        seedsAvailable.setValid(false);
+        seedsAvailable.setValid(true);
         
         filterAvailable.setId((Long) propositionDAO.save(filterAvailable));
         seedsAvailable.setId((Long) propositionDAO.save(seedsAvailable));
