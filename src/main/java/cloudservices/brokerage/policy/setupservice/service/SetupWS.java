@@ -6,7 +6,9 @@ package cloudservices.brokerage.policy.setupservice.service;
 
 import cloudservices.brokerage.commons.utils.file_utils.ResourceFileUtil;
 import cloudservices.brokerage.commons.utils.logging.LoggerSetup;
-import cloudservices.brokerage.policy.model.DAO.BaseDAO;
+import cloudservices.brokerage.policy.policycommons.model.DAO.BaseDAO;
+import cloudservices.brokerage.policy.policycommons.model.DAO.DAOException;
+import cloudservices.brokerage.policy.setupservice.logic.SampleDataInserter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -44,11 +46,33 @@ public class SetupWS {
         try {
             BaseDAO.createDatabase(configuration, databaseName);
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(SetupWS.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
             return false;
         } finally {
             BaseDAO.closeSession();
         }
         return true;
+    }
+
+    /**
+     * Web service operation to initialize the policy database and to insert
+     * sample policy data.
+     */
+    @WebMethod(operationName = "addSampleData")
+    public boolean addSampleData(@WebParam(name = "databaseName") String databaseName)
+            throws IOException, DAOException {
+        this.setupLoggers();
+        Configuration configuration = new Configuration();
+        configuration.configure("hibernate.cfg.xml");
+        try {
+            BaseDAO.createDatabase(configuration, databaseName);
+            SampleDataInserter sdi = new SampleDataInserter();
+            return sdi.insertSampleData();
+        } catch (ClassNotFoundException | SQLException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            BaseDAO.closeSession();
+        }
     }
 }
