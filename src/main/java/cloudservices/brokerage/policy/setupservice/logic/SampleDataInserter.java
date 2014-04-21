@@ -176,7 +176,7 @@ public class SampleDataInserter {
         policyDAO.saveOrUpdate(policy);
         
         Service composite = new Service();
-        composite.setName("Composite Service");
+        composite.setName("Composite Level 3 Crawler");
         Set<Service> level1 = new HashSet<>();
         level1.add(websphinx);
         Set<Service> level2 = new HashSet<>();
