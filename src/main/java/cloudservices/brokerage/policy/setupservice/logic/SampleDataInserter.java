@@ -202,6 +202,30 @@ public class SampleDataInserter {
         servicePropositionDAO.save(csp);
         
         serviceDAO.saveOrUpdate(composite);
+        return insertPolicyServices();
+    }
+
+    public boolean insertPolicyServices() throws DAOException {
+        Service setupService = new Service();
+        setupService.setName("Setup");
+        setupService.setWSDLURL("http://localhost:8080/SetupService/SetupWS?wsdl");
+        setupService.setId((Long) serviceDAO.save(setupService));
+        setupService.setServicesStr(setupService.getId().toString());
+        serviceDAO.saveOrUpdate(setupService);
+        
+        Service serviceExecutor = new Service();
+        serviceExecutor.setName("Service Executor");
+        serviceExecutor.setWSDLURL("http://localhost:8080/ServiceExecutor/ServiceExecutorWS?wsdl");
+        serviceExecutor.setId((Long) serviceDAO.save(serviceExecutor));
+        serviceExecutor.setServicesStr(serviceExecutor.getId().toString());
+        serviceDAO.saveOrUpdate(serviceExecutor);
+        
+                Service policyManager = new Service();
+        policyManager.setName("Policy Manager");
+        policyManager.setWSDLURL("http://localhost:8080/PolicyManager/PolicyManagerWS?wsdl");
+        policyManager.setId((Long) serviceDAO.save(policyManager));
+        policyManager.setServicesStr(policyManager.getId().toString());
+        serviceDAO.saveOrUpdate(policyManager);
         return true;
     }
 }
