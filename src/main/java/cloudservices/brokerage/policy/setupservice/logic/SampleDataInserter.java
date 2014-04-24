@@ -45,147 +45,79 @@ public class SampleDataInserter {
         servicePropositionDAO = new ServicePropositionDAO();
     }
 
-    public boolean insertSampleData() throws DAOException {
-        Proposition firstLevel = new Proposition();
-        firstLevel.setName("First Level");
-        firstLevel.setValid(true);
-        Proposition secondLevel = new Proposition();
-        secondLevel.setName("Second Level");
-        secondLevel.setValid(true);
-        Proposition thirdLevel = new Proposition();
-        thirdLevel.setName("Third Level");
-        thirdLevel.setValid(true);
+    public boolean insertSampleData(int numberOfLevels) throws DAOException {
+        Proposition crawler4jFinished = createProposition("Crawler4j Finished", true);
+        Proposition crawler4jFilteredFinished = createProposition("Crawler4j With Filter Finished", true);
+        Proposition websphinxFinished = createProposition("Websphinx Finished", true);
+        Proposition seedsAvailable = createProposition("Seeds Available", true);
 
-        firstLevel.setId((Long) propositionDAO.save(firstLevel));
-        secondLevel.setId((Long) propositionDAO.save(secondLevel));
-        thirdLevel.setId((Long) propositionDAO.save(thirdLevel));
+        Proposition[] levels = new Proposition[numberOfLevels];
+        Service[] crawler4js = new Service[numberOfLevels];
+        Service[] crawler4jFiltereds = new Service[numberOfLevels];
+        Service[] websphinxs = new Service[numberOfLevels];
 
-        Proposition crawler4jFinished = new Proposition();
-        crawler4jFinished.setName("Crawler4j Finished");
-        crawler4jFinished.setValid(true);
-        Proposition crawler4jFilteredFinished = new Proposition();
-        crawler4jFilteredFinished.setName("Crawler4j With Filter Finished");
-        crawler4jFilteredFinished.setValid(true);
-        Proposition websphinxFinished = new Proposition();
-        websphinxFinished.setName("Websphinx Finished");
-        websphinxFinished.setValid(true);
+        for (int i = 0; i < numberOfLevels; i++) {
+            levels[i] = createProposition("Level " + (i + 1) + " Completed", true);
+            crawler4js[i] = createCrawler4j(String.valueOf(i));
+            addInputToService(crawler4js[i], seedsAvailable);
+            addOutputToService(crawler4js[i], crawler4jFinished);
+            addOutputToService(crawler4js[i], levels[i]);
+            crawler4jFiltereds[i] = createCrawler4jFiltered(String.valueOf(i));
+            addInputToService(crawler4jFiltereds[i], seedsAvailable);
+            addOutputToService(crawler4jFiltereds[i], crawler4jFilteredFinished);
+            addOutputToService(crawler4jFiltereds[i], levels[i]);
+            websphinxs[i] = createWebsphinx(String.valueOf(i));
+            addInputToService(websphinxs[i], seedsAvailable);
+            addOutputToService(websphinxs[i], websphinxFinished);
+            addOutputToService(websphinxs[i], levels[i]);
+        }
 
-        crawler4jFinished.setId((Long) propositionDAO.save(crawler4jFinished));
-        crawler4jFilteredFinished.setId((Long) propositionDAO.save(crawler4jFilteredFinished));
-        websphinxFinished.setId((Long) propositionDAO.save(websphinxFinished));
+        for (int i = 1; i < numberOfLevels; i++) {
+            addInputToService(crawler4js[i], levels[i - 1]);
+            addInputToService(crawler4jFiltereds[i], levels[i - 1]);
+            addInputToService(websphinxs[i], levels[i - 1]);
+            serviceDAO.saveOrUpdate(crawler4js[i]);
+            serviceDAO.saveOrUpdate(crawler4jFiltereds[i]);
+            serviceDAO.saveOrUpdate(websphinxs[i]);
+        }
+        serviceDAO.saveOrUpdate(crawler4js[0]);
+        serviceDAO.saveOrUpdate(crawler4jFiltereds[0]);
+        serviceDAO.saveOrUpdate(websphinxs[0]);
 
-        Proposition filterAvailable = new Proposition();
-        filterAvailable.setName("Filter Available");
-        filterAvailable.setValid(true);
-        Proposition seedsAvailable = new Proposition();
-        seedsAvailable.setName("Seeds Available");
-        seedsAvailable.setValid(true);
-
-        filterAvailable.setId((Long) propositionDAO.save(filterAvailable));
-        seedsAvailable.setId((Long) propositionDAO.save(seedsAvailable));
-
-        Service crawler4j = new Service();
-        crawler4j.setName("crawler4j");
-        crawler4j.setWSDLURL("http://localhost:8080/crawler4jService/crawler4jWS?wsdl");
-        crawler4j.setId((Long) serviceDAO.save(crawler4j));
-        crawler4j.setServicesStr(crawler4j.getId().toString());
-        serviceDAO.saveOrUpdate(crawler4j);
-
-        Service crawler4jFiltered = new Service();
-        crawler4jFiltered.setName("crawler4jFiltered");
-        crawler4jFiltered.setWSDLURL("http://localhost:8080/crawler4jService/crawler4jWS?wsdl");
-        crawler4jFiltered.setId((Long) serviceDAO.save(crawler4jFiltered));
-        crawler4jFiltered.setServicesStr(crawler4jFiltered.getId().toString());
-        serviceDAO.saveOrUpdate(crawler4jFiltered);
-
-        Service websphinx = new Service();
-        websphinx.setName("websphinx");
-        websphinx.setWSDLURL("http://localhost:8080/websphinxService/WebsphinxWS?wsdl");
-        websphinx.setId((Long) serviceDAO.save(websphinx));
-        websphinx.setServicesStr(websphinx.getId().toString());
-        serviceDAO.saveOrUpdate(websphinx);
-
-        ServiceProposition sp = new ServiceProposition();
-        sp.addInputToService(websphinx, seedsAvailable);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(websphinx, firstLevel);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(websphinx, websphinxFinished);
-        servicePropositionDAO.save(sp);
-
-        sp = new ServiceProposition();
-        sp.addInputToService(crawler4j, firstLevel);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addInputToService(crawler4j, seedsAvailable);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(crawler4j, crawler4jFinished);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(crawler4j, secondLevel);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(crawler4j, thirdLevel);
-        servicePropositionDAO.save(sp);
-
-        sp = new ServiceProposition();
-        sp.addInputToService(crawler4jFiltered, secondLevel);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addInputToService(crawler4jFiltered, seedsAvailable);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addInputToService(crawler4jFiltered, filterAvailable);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(crawler4jFiltered, crawler4jFilteredFinished);
-        servicePropositionDAO.save(sp);
-        sp = new ServiceProposition();
-        sp.addOutputToService(crawler4jFiltered, thirdLevel);
-        servicePropositionDAO.save(sp);
-
+        //adding simple policy
         Policy policy = new Policy();
         policy.setName("Force Filtered Crawling in Level 3");
         policy.setPriority(1);
         policy.setId((Long) policyDAO.save(policy));
 
         PolicyProposition pp = new PolicyProposition();
-        pp.addConditionToPolicy(policy, secondLevel);
-        policyPropositionDAO.save(pp);
-        pp = new PolicyProposition();
-        pp.addConditionToPolicy(policy, filterAvailable);
+        pp.addConditionToPolicy(policy, levels[1]);
         policyPropositionDAO.save(pp);
         pp = new PolicyProposition();
         pp.addConditionToPolicy(policy, seedsAvailable);
         policyPropositionDAO.save(pp);
 
         pp = new PolicyProposition();
-        pp.addEventToPolicy(policy, thirdLevel);
+        pp.addEventToPolicy(policy, levels[2]);
         policyPropositionDAO.save(pp);
         pp = new PolicyProposition();
         pp.addEventToPolicy(policy, crawler4jFinished);
         policyPropositionDAO.save(pp);
 
         PolicyService ps = new PolicyService();
-        ps.addActionToPolicy(policy, crawler4jFiltered);
+        ps.addActionToPolicy(policy, crawler4jFiltereds[2]);
         policyServiceDAO.save(ps);
 
-        serviceDAO.saveOrUpdate(crawler4j);
-        serviceDAO.saveOrUpdate(crawler4jFiltered);
-        serviceDAO.saveOrUpdate(websphinx);
         policyDAO.saveOrUpdate(policy);
 
         Service composite = new Service();
         composite.setName("Composite Level 3 Crawler");
         Set<Service> level1 = new HashSet<>();
-        level1.add(websphinx);
+        level1.add(websphinxs[0]);
         Set<Service> level2 = new HashSet<>();
-        level2.add(crawler4j);
+        level2.add(crawler4js[1]);
         Set<Service> level3 = new HashSet<>();
-        level3.add(crawler4j);
+        level3.add(crawler4js[2]);
         composite.addServiceLevel(level1);
         composite.addServiceLevel(level2);
         composite.addServiceLevel(level3);
@@ -195,13 +127,16 @@ public class SampleDataInserter {
         csp.addInputToService(composite, seedsAvailable);
         servicePropositionDAO.save(csp);
         csp = new ServiceProposition();
-        csp.addOutputToService(composite, thirdLevel);
+        csp.addOutputToService(composite, levels[2]);
         servicePropositionDAO.save(csp);
         csp = new ServiceProposition();
         csp.addOutputToService(composite, websphinxFinished);
         servicePropositionDAO.save(csp);
         csp = new ServiceProposition();
         csp.addOutputToService(composite, crawler4jFinished);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, crawler4jFilteredFinished);
         servicePropositionDAO.save(csp);
 
         serviceDAO.saveOrUpdate(composite);
@@ -230,5 +165,55 @@ public class SampleDataInserter {
         policyManager.setServicesStr(policyManager.getId().toString());
         serviceDAO.saveOrUpdate(policyManager);
         return true;
+    }
+
+    private Long addInputToService(Service service, Proposition input) throws DAOException {
+        ServiceProposition sp = new ServiceProposition();
+        sp.addInputToService(service, input);
+        return (Long) servicePropositionDAO.save(sp);
+    }
+
+    private Long addOutputToService(Service service, Proposition output) throws DAOException {
+        ServiceProposition sp = new ServiceProposition();
+        sp.addOutputToService(service, output);
+        return (Long) servicePropositionDAO.save(sp);
+    }
+
+    private Service createCrawler4j(String level) throws DAOException {
+        Service crawler4j = new Service();
+        crawler4j.setName("crawler4j " + level);
+        crawler4j.setWSDLURL("http://localhost:8080/crawler4jService/crawler4jWS?wsdl");
+        crawler4j.setId((Long) serviceDAO.save(crawler4j));
+        crawler4j.setServicesStr(crawler4j.getId().toString());
+        serviceDAO.saveOrUpdate(crawler4j);
+        return crawler4j;
+    }
+
+    private Service createCrawler4jFiltered(String level) throws DAOException {
+        Service crawler4jFiltered = new Service();
+        crawler4jFiltered.setName("crawler4jFiltered " + level);
+        crawler4jFiltered.setWSDLURL("http://localhost:8080/crawler4jService/crawler4jWS?wsdl");
+        crawler4jFiltered.setId((Long) serviceDAO.save(crawler4jFiltered));
+        crawler4jFiltered.setServicesStr(crawler4jFiltered.getId().toString());
+        serviceDAO.saveOrUpdate(crawler4jFiltered);
+        return crawler4jFiltered;
+    }
+
+    private Service createWebsphinx(String level) throws DAOException {
+        Service websphinx = new Service();
+        websphinx.setName("websphinx " + level);
+        websphinx.setWSDLURL("http://localhost:8080/websphinxService/WebsphinxWS?wsdl");
+        websphinx.setId((Long) serviceDAO.save(websphinx));
+        websphinx.setServicesStr(websphinx.getId().toString());
+        serviceDAO.saveOrUpdate(websphinx);
+        return websphinx;
+    }
+
+    private Proposition createProposition(String name, boolean valid) throws DAOException {
+        Proposition prop = new Proposition();
+        prop.setName(name);
+        prop.setValid(true);
+        prop.setId((Long) propositionDAO.save(prop));
+        return prop;
     }
 }

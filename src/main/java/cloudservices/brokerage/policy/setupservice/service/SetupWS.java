@@ -59,7 +59,8 @@ public class SetupWS {
      * sample policy data.
      */
     @WebMethod(operationName = "addSampleData")
-    public boolean addSampleData(@WebParam(name = "databaseName") String databaseName)
+    public boolean addSampleData(@WebParam(name = "databaseName") String databaseName,
+            @WebParam(name = "levelsNumber") int levelsNumber)
             throws IOException, DAOException {
         this.setupLoggers();
         Configuration configuration = new Configuration();
@@ -67,7 +68,7 @@ public class SetupWS {
         try {
             BaseDAO.createDatabase(configuration, databaseName);
             SampleDataInserter sdi = new SampleDataInserter();
-            return sdi.insertSampleData();
+            return sdi.insertSampleData(levelsNumber);
         } catch (ClassNotFoundException | SQLException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             return false;
