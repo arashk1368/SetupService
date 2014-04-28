@@ -84,6 +84,78 @@ public class SampleDataInserter {
         serviceDAO.saveOrUpdate(crawler4jFiltereds[0]);
         serviceDAO.saveOrUpdate(websphinxs[0]);
 
+        //Composite Services
+        Service composite = new Service();
+        composite.setName("Composite Level 3 Crawler");
+        Set<Service> level1 = new HashSet<>();
+        level1.add(websphinxs[0]);
+        Set<Service> level2 = new HashSet<>();
+        level2.add(crawler4js[1]);
+        Set<Service> level3 = new HashSet<>();
+        level3.add(crawler4js[2]);
+        composite.addServiceLevel(level1);
+        composite.addServiceLevel(level2);
+        composite.addServiceLevel(level3);
+        composite.setId((Long) serviceDAO.save(composite));
+
+        ServiceProposition csp = new ServiceProposition();
+        csp.addInputToService(composite, seedsAvailable);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, levels[2]);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, websphinxFinished);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite, crawler4jFinished);
+        servicePropositionDAO.save(csp);
+
+        serviceDAO.saveOrUpdate(composite);
+        
+        Service composite10 = new Service();
+        composite10.setName("Composite Level 10 Crawler");
+        Set<Service> level4=new HashSet<>();
+        level4.add(crawler4js[3]);
+        Set<Service> level5=new HashSet<>();
+        level5.add(crawler4js[4]);
+        Set<Service> level6=new HashSet<>();
+        level6.add(crawler4js[5]);
+        Set<Service> level7=new HashSet<>();
+        level7.add(crawler4js[6]);
+        Set<Service> level8=new HashSet<>();
+        level8.add(crawler4js[7]);
+        Set<Service> level9=new HashSet<>();
+        level9.add(crawler4js[8]);
+        Set<Service> level10=new HashSet<>();
+        level10.add(crawler4js[9]);
+        composite10.addServiceLevel(level1);
+        composite10.addServiceLevel(level2);
+        composite10.addServiceLevel(level3);
+        composite10.addServiceLevel(level4);
+        composite10.addServiceLevel(level5);
+        composite10.addServiceLevel(level6);
+        composite10.addServiceLevel(level7);
+        composite10.addServiceLevel(level8);
+        composite10.addServiceLevel(level9);
+        composite10.addServiceLevel(level10);
+        composite10.setId((Long) serviceDAO.save(composite10));
+
+        csp = new ServiceProposition();
+        csp.addInputToService(composite10, seedsAvailable);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite10, levels[9]);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite10, websphinxFinished);
+        servicePropositionDAO.save(csp);
+        csp = new ServiceProposition();
+        csp.addOutputToService(composite10, crawler4jFinished);
+        servicePropositionDAO.save(csp);
+
+        serviceDAO.saveOrUpdate(composite10);
+        
         //adding simple policy
         Policy policy = new Policy();
         policy.setName("Force Filtered Crawling in Level 3");
@@ -110,36 +182,7 @@ public class SampleDataInserter {
 
         policyDAO.saveOrUpdate(policy);
 
-        Service composite = new Service();
-        composite.setName("Composite Level 3 Crawler");
-        Set<Service> level1 = new HashSet<>();
-        level1.add(websphinxs[0]);
-        Set<Service> level2 = new HashSet<>();
-        level2.add(crawler4js[1]);
-        Set<Service> level3 = new HashSet<>();
-        level3.add(crawler4js[2]);
-        composite.addServiceLevel(level1);
-        composite.addServiceLevel(level2);
-        composite.addServiceLevel(level3);
-        composite.setId((Long) serviceDAO.save(composite));
-
-        ServiceProposition csp = new ServiceProposition();
-        csp.addInputToService(composite, seedsAvailable);
-        servicePropositionDAO.save(csp);
-        csp = new ServiceProposition();
-        csp.addOutputToService(composite, levels[2]);
-        servicePropositionDAO.save(csp);
-        csp = new ServiceProposition();
-        csp.addOutputToService(composite, websphinxFinished);
-        servicePropositionDAO.save(csp);
-        csp = new ServiceProposition();
-        csp.addOutputToService(composite, crawler4jFinished);
-        servicePropositionDAO.save(csp);
-        csp = new ServiceProposition();
-        csp.addOutputToService(composite, crawler4jFilteredFinished);
-        servicePropositionDAO.save(csp);
-
-        serviceDAO.saveOrUpdate(composite);
+        
         return insertPolicyServices();
     }
 
